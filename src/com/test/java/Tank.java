@@ -103,38 +103,57 @@ public class Tank {
     }
     //
 }
-class MyTank extends Tank{
-    public MyTank(int x,int y){
-        super(x,y);
+class MyTank extends Tank {
+    public MyTank(int x, int y) {
+        super(x, y);
     }
-    Zdan z=null;
-    public void shot(){
-        switch (this.direction){
-            case 0:
-                    z = new Zdan(x+8,y-5,0);
-                break;
-            case  1:
-                    z = new Zdan(x+32,y+8,1);
-                break;
 
+    Zdan z = null;
+
+    public void shot() {
+        switch (this.direction) {
+            case 0:
+                z = new Zdan(x + 8, y - 5, 0);
+                break;
+            case 1:
+                z = new Zdan(x + 32, y + 8, 1);
+                break;
             case 2:
-                    z = new Zdan(x+8,y+32,2);
+                z = new Zdan(x + 8, y + 32, 2);
                 break;
             case 3:
-                    z = new Zdan(x-2,y+8,3);
+                z = new Zdan(x - 2, y + 8, 3);
                 break;
         }
-
-        Thread t =new Thread(z);
+        Thread t = new Thread(z);
         t.start();
     }
 }
-
 
 
 class  QTank01 extends Tank{
     public QTank01(int x,int y) {
         super(x, y);
     }
+    Zdan z1=null;
+    public void shot() {
+        switch (this.direction) {
+            case 0:
+                z1 = new Zdan(x + 8, y - 8, 0);
+                break;
+            case 1:
+                z1 = new Zdan(x + 35, y + 8, 1);
+                break;
 
+            case 2:
+                z1 = new Zdan(x + 8, y + 35, 2);
+                break;
+            case 3:
+                z1 = new Zdan(x - 5, y + 8, 3);
+                break;
+        }
+
+        Thread t = new Thread(z1);
+        t.start();
+    }
 }

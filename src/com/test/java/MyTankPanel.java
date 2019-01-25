@@ -41,6 +41,13 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             g.setColor(Color.green);
             g.fill3DRect(myTank.z.x,myTank.z.y,5,5,false);
         }
+        for(int i=0;i<ets.size();i++){
+            if(ets.get(i).z1!=null&&ets.get(i).z1.isLive==true){
+                g.setColor(Color.white);
+                g.fill3DRect(ets.get(i).z1.x,ets.get(i).z1.y,5,5,false);
+            }
+
+        }
         this.drawTank(myTank.getX(),myTank.getY(),g,myTank.getDirection(),myTank.getColor(),myTank.getType());
         for(int i=0;i<ets.size();i++){
             this.drawTank(ets.get(i).getX(),ets.get(i).getY(),g,ets.get(i).getDirection(),ets.get(i).getColor(),ets.get(i).getType());
@@ -149,6 +156,9 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
         }
 
         for(int i=0;i<ets.size();i++){
+           if(true){
+                ets.get(i).shot();
+            }
         if(e.getKeyCode()==KeyEvent.VK_W){
             ets.get(i).direction=2;
             ets.get(i).moveDowm();
