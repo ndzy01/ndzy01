@@ -17,6 +17,9 @@ public class text extends JFrame{
     public text(){
             mp = new MyTankPanel();
             this.add(mp);
+            //
+            Thread t = new Thread(mp);
+            t.start();
             this.addKeyListener(mp);
             this.setTitle("ndzy");//设置标题
             this.setSize(800,600);//设置大小

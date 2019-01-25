@@ -12,9 +12,9 @@ import java.util.Vector;
  * @function
  */
 
-public class MyTankPanel extends JPanel implements KeyListener {
+public class MyTankPanel extends JPanel implements KeyListener,Runnable {
+    //定义我的坦克
     MyTank myTank = null;
-    QTank01 qTank01 = null;
     //定义敌方坦克组
     Vector<QTank01> ets = new Vector<QTank01>();
     int enSize = 3;
@@ -23,12 +23,6 @@ public class MyTankPanel extends JPanel implements KeyListener {
         myTank = new MyTank(200,200);
         myTank.setDirection(0);
         myTank.setType(0);
-        //
-        qTank01 = new QTank01(400,300);
-        qTank01.setDirection(0);
-        qTank01.setType(1);
-        qTank01.setColor(1);
-
         //
         for (int i=0;i<enSize;i++){
             QTank01 qT = new QTank01((i+1)*100,0);
@@ -43,8 +37,11 @@ public class MyTankPanel extends JPanel implements KeyListener {
         g.fillRect(0,0,800,600);
 
         //画我的坦克,朝上，红色
+        if(myTank.z!=null&&myTank.z.isLive==true){
+            g.setColor(Color.green);
+            g.fill3DRect(myTank.z.x,myTank.z.y,5,5,false);
+        }
         this.drawTank(myTank.getX(),myTank.getY(),g,myTank.getDirection(),myTank.getColor(),myTank.getType());
-        this.drawTank(qTank01.getX(),qTank01.getY(),g,qTank01.getDirection(),qTank01.getColor(),qTank01.getType());
         for(int i=0;i<ets.size();i++){
             this.drawTank(ets.get(i).getX(),ets.get(i).getY(),g,ets.get(i).getDirection(),ets.get(i).getColor(),ets.get(i).getType());
         }
@@ -128,8 +125,6 @@ public class MyTankPanel extends JPanel implements KeyListener {
                     g.drawLine(x+15,y+10,x-5,y+10);
                 }
                 break;
-
-
         }
     }
 
@@ -146,24 +141,13 @@ public class MyTankPanel extends JPanel implements KeyListener {
         }else if(e.getKeyCode()==KeyEvent.VK_D){
             myTank.direction=1;
             myTank.moveRight();
-        }else{
+        }else {
+            }
+    //**********************
+        if(e.getKeyCode()== KeyEvent.VK_J){
+        myTank.shot();
         }
-        if(e.getKeyCode()==KeyEvent.VK_W){
-            qTank01.direction=2;
-            qTank01.moveDowm();
-        }else if(e.getKeyCode()==KeyEvent.VK_S){
-            qTank01.direction=0;
-            qTank01.moveUp();
 
-        }else if(e.getKeyCode()==KeyEvent.VK_A){
-            qTank01.direction=1;
-            qTank01.moveRight();
-        }else if(e.getKeyCode()==KeyEvent.VK_D){
-            qTank01.direction=3;
-            qTank01.moveLeft();
-        }else{
-
-        }
         for(int i=0;i<ets.size();i++){
         if(e.getKeyCode()==KeyEvent.VK_W){
             ets.get(i).direction=2;
@@ -191,7 +175,16 @@ public class MyTankPanel extends JPanel implements KeyListener {
     public  void keyTyped(KeyEvent e){
 
     }
-
+    public void run(){
+       while (true){
+           try{
+               Thread.sleep(100);
+           }catch (InterruptedException e){
+               e.printStackTrace();
+           }
+           this.repaint();
+       }
+}
 
 }
 
