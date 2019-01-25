@@ -44,6 +44,16 @@ public class Tank {
     public int getSpeed() {
         return speed;
     }
+    //坦克颜色
+    int color = 0;
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
 
     //坦克类型
     int type=0;
