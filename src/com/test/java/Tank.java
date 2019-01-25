@@ -1,5 +1,7 @@
 package com.test.java;
 
+import java.util.Vector;
+
 /**
  * @author Zhang Yi
  * @create 2019- 01- 24- 15:17
@@ -108,52 +110,138 @@ class MyTank extends Tank {
         super(x, y);
     }
 
+    Vector<Zdan> ss=new Vector<Zdan>();
     Zdan z = null;
 
     public void shot() {
         switch (this.direction) {
             case 0:
-                z = new Zdan(x + 8, y - 5, 0);
-                break;
-            case 1:
-                z = new Zdan(x + 32, y + 8, 1);
-                break;
-            case 2:
-                z = new Zdan(x + 8, y + 32, 2);
-                break;
-            case 3:
-                z = new Zdan(x - 2, y + 8, 3);
-                break;
-        }
+        z = new Zdan(x + 8, y - 5, 0);
+        ss.add(z);
+        break;
+        case 1:
+        z = new Zdan(x + 32, y + 8, 1);
+        ss.add(z);
+        break;
+        case 2:
+        z = new Zdan(x + 8, y + 32, 2);
+        ss.add(z);
+        break;
+        case 3:
+        z = new Zdan(x - 2, y + 8, 3);
+        ss.add(z);
+        break;
+    }
         Thread t = new Thread(z);
         t.start();
     }
 }
 
 
-class  QTank01 extends Tank{
-    public QTank01(int x,int y) {
+class  QTank01 extends Tank implements Runnable {
+    boolean isLive = true;
+    int b_speed = 3;
+    int times = 0;
+    //
+    //敌人添加子弹，在坦克刚创建和坦克子弹死亡
+
+    Vector<Zdan> ss = new Vector<Zdan>();
+
+    public QTank01(int x, int y) {
         super(x, y);
     }
-    Zdan z1=null;
-    public void shot() {
-        switch (this.direction) {
-            case 0:
-                z1 = new Zdan(x + 8, y - 8, 0);
-                break;
-            case 1:
-                z1 = new Zdan(x + 35, y + 8, 1);
-                break;
 
-            case 2:
-                z1 = new Zdan(x + 8, y + 35, 2);
+    @Override
+    public void run() {
+        while (true) {
+            switch (this.direction) {
+                case 0:
+                    for (int i = 0; i < 30; i++) {
+                        //坦克此时在向上走
+                        if (y > 5) {
+                            y -= b_speed;
+                        }
+                        try {
+                            Thread.sleep(50);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case 1:
+                    for (int i = 0; i < 30; i++) {
+                        if (x < 750) {
+                            x += b_speed;
+                        }
+                        try {
+                            Thread.sleep(50);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < 30; i++) {
+                        if (y < 520) {
+                            y += b_speed;
+                        }
+                        try {
+                            Thread.sleep(50);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < 30; i++) {
+                        if (x > 5) {
+                            x -= b_speed;
+                        }
+                        try {
+                            Thread.sleep(50);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+            }
+            this.times++;
+            if (times % 2 == 0) {
+                if (ss.size() < 5) {
+                    Zdan z = null;
+                    switch (direction) {
+                        case 0:
+                            z = new Zdan(x + 8, y - 5, 0);
+                            ss.add(z);
+                            break;
+                        case 1:
+                            z = new Zdan(x + 32, y + 8, 1);
+                            ss.add(z);
+                            break;
+                        case 2:
+                            z = new Zdan(x + 8, y + 35, 2);
+                            ss.add(z);
+                            break;
+                        case 3:
+                            z = new Zdan(x - 5, y + 8, 3);
+                            ss.add(z);
+                            break;
+                    }
+                    Thread t=new Thread();
+                    t.start();
+                }
+            }
+
+            //坦克随机产生一个方向
+
+            this.direction = (int) (Math.random() * 4);
+
+
+            //判断敌方坦克是否死亡
+            if (this.isLive == false) {
                 break;
-            case 3:
-                z1 = new Zdan(x - 5, y + 8, 3);
-                break;
+            }
         }
-
-        Thread t = new Thread(z1);
-        t.start();
     }
 }
+
