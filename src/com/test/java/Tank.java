@@ -39,7 +39,7 @@ public class Tank {
 
 
     //坦克初始速度
-    int speed = 20;
+    int speed = 3;
 
     public void setSpeed(int speed) {
         this.speed = speed;
@@ -140,12 +140,11 @@ class MyTank extends Tank {
 
 class  QTank01 extends Tank implements Runnable {
     boolean isLive = true;
-    int b_speed = 3;
-    int times = 0;
+    int times = 2;
     //
     //敌人添加子弹，在坦克刚创建和坦克子弹死亡
 
-    Vector<Zdan> ss = new Vector<Zdan>();
+    Vector<Zdan> ss01= new Vector<Zdan>();
 
     public QTank01(int x, int y) {
         super(x, y);
@@ -153,13 +152,14 @@ class  QTank01 extends Tank implements Runnable {
 
     @Override
     public void run() {
+        int numbers=10;
         while (true) {
             switch (this.direction) {
                 case 0:
-                    for (int i = 0; i < 30; i++) {
+                    for (int i = 0; i < numbers; i++) {
                         //坦克此时在向上走
                         if (y > 5) {
-                            y -= b_speed;
+                            y -= speed;
                         }
                         try {
                             Thread.sleep(50);
@@ -169,9 +169,9 @@ class  QTank01 extends Tank implements Runnable {
                     }
                     break;
                 case 1:
-                    for (int i = 0; i < 30; i++) {
+                    for (int i = 0; i < numbers; i++) {
                         if (x < 750) {
-                            x += b_speed;
+                            x += speed;
                         }
                         try {
                             Thread.sleep(50);
@@ -181,9 +181,9 @@ class  QTank01 extends Tank implements Runnable {
                     }
                     break;
                 case 2:
-                    for (int i = 0; i < 30; i++) {
+                    for (int i = 0; i < numbers; i++) {
                         if (y < 520) {
-                            y += b_speed;
+                            y += speed;
                         }
                         try {
                             Thread.sleep(50);
@@ -193,9 +193,9 @@ class  QTank01 extends Tank implements Runnable {
                     }
                     break;
                 case 3:
-                    for (int i = 0; i < 30; i++) {
+                    for (int i = 0; i < numbers; i++) {
                         if (x > 5) {
-                            x -= b_speed;
+                            x -= speed;
                         }
                         try {
                             Thread.sleep(50);
@@ -207,27 +207,27 @@ class  QTank01 extends Tank implements Runnable {
             }
             this.times++;
             if (times % 2 == 0) {
-                if (ss.size() < 5) {
+                if (ss01.size() < 5) {
                     Zdan z = null;
                     switch (direction) {
                         case 0:
                             z = new Zdan(x + 8, y - 5, 0);
-                            ss.add(z);
+                            ss01.add(z);
                             break;
                         case 1:
                             z = new Zdan(x + 32, y + 8, 1);
-                            ss.add(z);
+                            ss01.add(z);
                             break;
                         case 2:
                             z = new Zdan(x + 8, y + 35, 2);
-                            ss.add(z);
+                            ss01.add(z);
                             break;
                         case 3:
                             z = new Zdan(x - 5, y + 8, 3);
-                            ss.add(z);
+                            ss01.add(z);
                             break;
                     }
-                    Thread t=new Thread();
+                    Thread t=new Thread(z);
                     t.start();
                 }
             }
