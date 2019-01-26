@@ -15,11 +15,9 @@ import java.util.Vector;
 public class MyTankPanel extends JPanel implements KeyListener,Runnable {
     //定义我的坦克组
     Vector<MyTank> ets00 = new Vector<MyTank>();
-
-
-
     //定义敌方坦克组
     Vector<QTank01> ets = new Vector<QTank01>();
+
     int enSize = 5;
     Vector<Bomb> bombs = new Vector<Bomb>();
     //定义三张图片
@@ -38,6 +36,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             //
             ets00.add(myTank);
         }
+
         for (int i=0;i<enSize;i++){
             QTank01 qT = new QTank01((i+1)*100,200);
             qT.setColor(1);
@@ -99,13 +98,13 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 break;
         }
 
-
     }
+
     public void paint (Graphics g){
         super.paint(g);
         g.fillRect(0,0,800,600);
 
-        //画我的坦克,朝上，红色
+        //画我的坦克,和子弹
         for(int i=0;i<ets00.size();i++) {
             MyTank mt = ets00.get(i);
             if (mt.isLive) {
@@ -135,7 +134,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             }
         }
 
-       //画炸弹
+        //画炸弹
         for(int i=0;i<bombs.size();i++){
             Bomb b = bombs.get(i);
             if(b.life>4){
@@ -150,36 +149,32 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 bombs.remove(b);
             }
         }
-
-
-        //画敌方坦克
+        //画敌方坦克和子弹
         for(int i=0;i<ets.size();i++) {
             QTank01 qt = ets.get(i);
             if (qt.isLive) {
                 this.drawTank(qt.getX(), qt.getY(), g, qt.getDirection(), qt.getColor(), ets.get(i).getType());
                 //画子弹
                 for(int j=0;j<qt.ss01.size();j++){
-                  //
-                  Zdan zd=qt.ss01.get(j);
-                  if(zd.x<20||zd.y<20||zd.x>780||zd.y>580){
-                      zd.isLive=false;
-                  }
-
-
-                  if(zd.isLive){
-                      g.setColor(Color.red);
-                      g.fill3DRect(zd.x, zd.y, 5, 5, false);
-                  }else{
-                      qt.ss01.remove(zd);
-                  }
-                  Thread t = new Thread(zd);
-                  t.start();
-                  }
+                    //
+                    Zdan zd=qt.ss01.get(j);
+                    if(zd.x<20||zd.y<20||zd.x>780||zd.y>580){
+                        zd.isLive=false;
+                    }
+                    if(zd.isLive){
+                        g.setColor(Color.red);
+                        g.fill3DRect(zd.x, zd.y, 5, 5, false);
+                    }else{
+                        qt.ss01.remove(zd);
+                    }
+                    Thread t = new Thread(zd);
+                    t.start();
                 }
             }
+        }
     }
-    //定义一个画坦克的函数drawTank
-    public void drawTank(int x,int y,Graphics g,int direct,int color,int type ){
+
+    public void pd_color(int color,Graphics g){
         //坦克颜色
         switch (color){
             case 0:
@@ -189,72 +184,91 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 g.setColor(Color.red);
                 break;
         }
-        //判断方向
+    }
+    public  void m_Tank(int x,int y,int direct ,Graphics g){
+
         switch (direct){
             //向上
             case 0:
-                if(type==0){
-                g.fill3DRect(x,y,5,30,false);
-                g.fill3DRect(x+15,y,5,30,false);
-                g.fill3DRect(x+5,y+5,10,20,false);
-                g.fillOval(x+5,y+10,10,10);
-                g.drawLine(x+10,y+15,x+10,y-2);
-                }else{
+                    g.fill3DRect(x,y,5,30,false);
+                    g.fill3DRect(x+15,y,5,30,false);
+                    g.fill3DRect(x+5,y+5,10,20,false);
+                    g.fillOval(x+5,y+10,10,10);
+                    g.drawLine(x+10,y+15,x+10,y-2);
+                    break;
+            //向右
+            case 1:
+                    g.fill3DRect(x,y,30,5,false);
+                    g.fill3DRect(x,y+15,30,5,false);
+                    g.fill3DRect(x+5,y+5,20,10,false);
+                    g.fillOval(x+9,y+5,10,10);
+                    g.drawLine(x+15,y+10,x+32,y+10);
+                    break;
+            //向下
+            case 2:
+                    g.fill3DRect(x,y,5,30,false);
+                    g.fill3DRect(x+15,y,5,30,false);
+                    g.fill3DRect(x+5,y+5,10,20,false);
+                    g.fillOval(x+5,y+10,10,10);
+                    g.drawLine(x+10,y+15,x+10,y+32);
+                    break;
+            //
+            case 3:
+                    g.fill3DRect(x,y,30,5,false);
+                    g.fill3DRect(x,y+15,30,5,false);
+                    g.fill3DRect(x+5,y+5,20,10,false);
+                    g.fillOval(x+9,y+5,10,10);
+                    g.drawLine(x+15,y+10,x-2,y+10);
+                     break;
+        }
+    }
+    public  void q_Tank(int x,int y,int direct ,Graphics g){
+        switch (direct){
+            //向上
+            case 0:
                     g.fill3DRect(x,y,5,30,false);
                     g.fill3DRect(x+15,y,5,30,false);
                     g.fill3DRect(x+5,y+5,10,20,false);
                     g.fillOval(x+5,y+10,10,10);
                     g.drawLine(x+10,y+15,x+10,y-5);
-                }
+
                 break;
             //向右
             case 1:
-                if(type==0){
-                g.fill3DRect(x,y,30,5,false);
-                g.fill3DRect(x,y+15,30,5,false);
-                g.fill3DRect(x+5,y+5,20,10,false);
-                g.fillOval(x+9,y+5,10,10);
-                g.drawLine(x+15,y+10,x+32,y+10);
-                }else{
                     g.fill3DRect(x,y,30,5,false);
                     g.fill3DRect(x,y+15,30,5,false);
                     g.fill3DRect(x+5,y+5,20,10,false);
                     g.fillOval(x+9,y+5,10,10);
                     g.drawLine(x+15,y+10,x+35,y+10);
-                }
-
                 break;
             //向下
             case 2:
-                if(type==0){
-                g.fill3DRect(x,y,5,30,false);
-                g.fill3DRect(x+15,y,5,30,false);
-                g.fill3DRect(x+5,y+5,10,20,false);
-                g.fillOval(x+5,y+10,10,10);
-                g.drawLine(x+10,y+15,x+10,y+32);
-                }else{
                     g.fill3DRect(x,y,5,30,false);
                     g.fill3DRect(x+15,y,5,30,false);
                     g.fill3DRect(x+5,y+5,10,20,false);
                     g.fillOval(x+5,y+10,10,10);
                     g.drawLine(x+10,y+15,x+10,y+35);
-                }
                 break;
             //
             case 3:
-                if(type==0){
-                g.fill3DRect(x,y,30,5,false);
-                g.fill3DRect(x,y+15,30,5,false);
-                g.fill3DRect(x+5,y+5,20,10,false);
-                g.fillOval(x+9,y+5,10,10);
-                g.drawLine(x+15,y+10,x-2,y+10);
-                }else{
                     g.fill3DRect(x,y,30,5,false);
                     g.fill3DRect(x,y+15,30,5,false);
                     g.fill3DRect(x+5,y+5,20,10,false);
                     g.fillOval(x+9,y+5,10,10);
                     g.drawLine(x+15,y+10,x-5,y+10);
-                }
+                     break;
+        }
+    }
+    //定义一个画坦克的函数drawTank
+    public void drawTank(int x,int y,Graphics g,int direct,int color,int type ){
+        this.pd_color(color,g);
+        //判断类型
+        switch (type){
+            case 0:
+                this.m_Tank(x,y,direct,g);
+                break;
+            case 1:
+                this.q_Tank(x,y,direct,g);
                 break;
         }
     }
@@ -293,48 +307,96 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
     public  void keyTyped(KeyEvent e){
 
     }
+
+
+
+    //判断我方坦克是否击中敌方
+    public void mk_shot(){
+        for(int n=0;n<ets00.size();n++) {
+            for (int i = 0; i <ets00.get(n).ss.size();i++) {
+                Zdan zd = ets00.get(n).ss.get(i);
+                //判断子弹是否有效
+                if (zd.isLive) {
+                    //取出每个坦克与之匹配
+                    for (int j = 0; j < ets.size(); j++) {
+                        //取出坦克
+                        QTank01 qt = ets.get(j);
+                        if (qt.isLive) {
+                            this.tk_zd(zd, qt);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //判断敌方坦克是否击中我方坦克
+    public  void qk_shot(){
+        for (int i=0;i<ets.size();i++){
+            QTank01 qt = ets.get(i);
+            for(int j=0;j<qt.ss01.size();j++){
+                Zdan zd = qt.ss01.get(j);
+                for(int n=0;n<ets00.size();n++) {
+                    MyTank mt =ets00.get(n);
+                    if (mt.isLive) {
+                        this.tk_zd(zd, mt);
+                    }
+                }
+            }
+        }
+    }
     //实现接口
+    public  void pz_qt(){
+        for(int i=0;i<ets.size();i++){
+            int q=100;
+            QTank01 qt =ets.get(i);
+            for(int j=0;j<ets.size();j++){
+                QTank01 qt01=ets.get(j);
+                if(i!=j){
+                    switch (qt.direction){
+                        case 0:
+                            if((qt01.y-qt.y)==q||(qt.x==qt01.x)){
+                                qt.direction=2;
+                            }
+                            break;
+                        case 1:
+                            if((qt01.x-qt.x)==q||(qt.y==qt01.y)){
+                                qt.direction=3;
+                            }
+                            break;
+                        case 2:
+                            if((qt.y-qt01.y)==q||(qt.x==qt01.x)){
+                                qt.direction=2;
+                            }
+                            break;
+                        case 3:
+                            if((qt.x-qt01.x)==q||(qt.y==qt01.y)){
+                                qt.direction=1;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    }
     public void run(){
-       while (true){
-           try{
-               Thread.sleep(100);
-           }catch (InterruptedException e){
-               e.printStackTrace();
-           }
+       // QTank01 q =new QTank01(0,0);
+       // q.ets01=ets;
+        while (true){
+            try{
+                Thread.sleep(100);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            //判断我方坦克是否击中敌方
+            this.mk_shot();
+            //判断敌方坦克是否击中我方坦克
+            this.qk_shot();
+            //*****************
+            this.pz_qt();
+            //重绘
+            this.repaint();
+        }
 
-           //判断是否击中
-           for(int n=0;n<ets00.size();n++) {
-               for (int i = 0; i <ets00.get(n).ss.size();i++) {
-                   Zdan zd = ets00.get(n).ss.get(i);
-                   //判断子弹是否有效
-                   if (zd.isLive) {
-                       //取出每个坦克与之匹配
-                       for (int j = 0; j < ets.size(); j++) {
-                           //取出坦克
-                           QTank01 qt = ets.get(j);
-                           if (qt.isLive) {
-                               this.tk_zd(zd, qt);
-                           }
-                       }
-                   }
-               }
-           }
-
-           for (int i=0;i<ets.size();i++){
-               QTank01 qt = ets.get(i);
-               for(int j=0;j<qt.ss01.size();j++){
-                   Zdan zd = qt.ss01.get(j);
-                   for(int n=0;n<ets00.size();n++) {
-                       MyTank mt =ets00.get(n);
-                       if (mt.isLive) {
-                           this.tk_zd(zd, mt);
-                       }
-                   }
-               }
-           }
-           //重绘
-           this.repaint();
-       }
     }
 }
 

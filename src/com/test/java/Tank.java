@@ -146,21 +146,21 @@ class MyTank extends Tank implements Runnable{
     }
 
  public void run(){
-    }
+}
 }
 
 
 class  QTank01 extends Tank implements Runnable {
-
     int times = 2;
     //
     //敌人添加子弹，在坦克刚创建和坦克子弹死亡
 
     Vector<Zdan> ss01= new Vector<Zdan>();
-
+    //Vector<QTank01> ets01 = new Vector<QTank01>();
     public QTank01(int x, int y) {
         super(x, y);
     }
+
 
     @Override
     public void run() {
@@ -217,6 +217,7 @@ class  QTank01 extends Tank implements Runnable {
                     }
                     break;
             }
+
             this.times++;
             if (times % 2 == 0) {
                 if (ss01.size() < 5) {
@@ -245,7 +246,38 @@ class  QTank01 extends Tank implements Runnable {
             }
 
             //坦克随机产生一个方向
-
+/*
+            for(int i=0;i<ets01.size();i++){
+                int q=200;
+                QTank01 qt =ets01.get(i);
+                for(int j=0;j<ets01.size();j++){
+                    QTank01 qt01=ets01.get(j);
+                    if(i!=j){
+                        switch (qt.direction){
+                            case 0:
+                                if((qt01.y-qt.y)<q){
+                                    this.direction=2;
+                                }
+                                break;
+                            case 1:
+                                if((qt01.x-qt.x)<q){
+                                    this.direction=3;
+                                }
+                                break;
+                            case 2:
+                                if((qt.y-qt01.y)<q){
+                                    this.direction=2;
+                                }
+                                break;
+                            case 3:
+                                if((qt.x-qt01.x)<q){
+                                    this.direction=1;
+                                }
+                                break;
+                        }
+                    }
+                }
+            }*/
             this.direction = (int) (Math.random() * 4);
 
 
