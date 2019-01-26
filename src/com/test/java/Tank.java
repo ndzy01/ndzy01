@@ -15,6 +15,15 @@ public class Tank {
         this.y = y;
 
     }
+        boolean isLive =true;
+
+         public void setIsLive(boolean isLive) {
+        this.isLive = isLive;
+    }
+
+            public boolean getIsLive() {
+        return isLive;
+    }
 
     //坦克初始坐标
     int x = 100;
@@ -105,7 +114,7 @@ public class Tank {
     }
     //
 }
-class MyTank extends Tank {
+class MyTank extends Tank implements Runnable{
     public MyTank(int x, int y) {
         super(x, y);
     }
@@ -135,11 +144,14 @@ class MyTank extends Tank {
         Thread t = new Thread(z);
         t.start();
     }
+
+ public void run(){
+    }
 }
 
 
 class  QTank01 extends Tank implements Runnable {
-    boolean isLive = true;
+
     int times = 2;
     //
     //敌人添加子弹，在坦克刚创建和坦克子弹死亡
