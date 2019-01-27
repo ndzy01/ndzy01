@@ -1,9 +1,11 @@
 package com.test.java;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -51,9 +53,18 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             ets.add(qT);
         }
         //初始化图片
-        image1=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/3.jpg"));
-        image2=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/2.jpg"));
-        image3=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/1.jpg"));
+
+        try{
+            image1 =ImageIO.read(new File("D:\\ndzy\\src\\3.jpg"));
+            image2 =ImageIO.read(new File("D:\\ndzy\\src\\3.jpg"));
+            image2 =ImageIO.read(new File("D:\\ndzy\\src\\3.jpg"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //image1=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/3.jpg"));
+        //image2=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/2.jpg"));
+        //image3=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/1.jpg"));
     }
     public void tk_zd(Zdan z,Tank t){
         //判断子弹是否击中坦克

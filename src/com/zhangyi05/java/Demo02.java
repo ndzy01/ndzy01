@@ -2,6 +2,8 @@ package com.zhangyi05.java;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * @author Zhang Yi
@@ -12,14 +14,14 @@ import java.awt.*;
 public class Demo02 extends JFrame {
 
 
-    MyPanel mp = null;
+    Mypanel02 mp = null;
     public static void main(String[] args) {
     Demo02 demo02 = new Demo02();
     }
     public Demo02(){
-        mp = new MyPanel();
+        mp = new Mypanel02();
         this.add(mp);
-
+        this.addKeyListener(mp);
         this.setTitle("ndzy");//设置标题
         this.setSize(800,600);//设置大小
         this.setLocation(100,200);//设置初始位置
@@ -32,19 +34,21 @@ public class Demo02 extends JFrame {
 
 
 //我的面板
-class MyPanel extends  JPanel{
+class Mypanel02 extends  JPanel implements KeyListener  {
     //定义一个我的坦克
     MyTank myTank = null;
-    public MyPanel(){
-        myTank = new MyTank(10,10);
+    int x=10;
+    int y=10;
+    int d=0;
+    public Mypanel02(){
+        myTank = new MyTank(x,y);
     }
     public void paint (Graphics g){
 
         super.paint(g);
         g.fillRect(0,0,800,600);
         //画坦克
-        this.drawTank(myTank.getX(),myTank.getY(),g,0,1);
-
+        this.drawTank(x,y,g,d,1);
 
     }
     public void drawTank(int x,int y,Graphics g,int direct,int type ){
@@ -67,10 +71,63 @@ class MyPanel extends  JPanel{
                 g.fill3DRect(x+5,y+5,10,20,false);
                 g.fillOval(x+5,y+10,10,10);
                 g.drawLine(x+10,y+15,x+10,y-2);
-            break;
+                break;
+            //向右
+            case 1:
+                g.fill3DRect(x,y,30,5,false);
+                g.fill3DRect(x,y+15,30,5,false);
+                g.fill3DRect(x+5,y+5,20,10,false);
+                g.fillOval(x+9,y+5,10,10);
+                g.drawLine(x+15,y+10,x+32,y+10);
+                break;
+            //向下
+            case 2:
+                g.fill3DRect(x,y,5,30,false);
+                g.fill3DRect(x+15,y,5,30,false);
+                g.fill3DRect(x+5,y+5,10,20,false);
+                g.fillOval(x+5,y+10,10,10);
+                g.drawLine(x+10,y+15,x+10,y+32);
+                break;
+            //
+            case 3:
+                g.fill3DRect(x,y,30,5,false);
+                g.fill3DRect(x,y+15,30,5,false);
+                g.fill3DRect(x+5,y+5,20,10,false);
+                g.fillOval(x+9,y+5,10,10);
+                g.drawLine(x+15,y+10,x-2,y+10);
+                break;
+
 
         }
     }
+
+    public void keyPressed(KeyEvent e){
+        if(e.getKeyCode()==KeyEvent.VK_W){
+            y=y-4;
+            d=0;
+        }else if(e.getKeyCode()==KeyEvent.VK_S){
+            y=y+4;
+            d=2;
+        }else if(e.getKeyCode()==KeyEvent.VK_A){
+            x=x-4;
+            d=3;
+        }else if(e.getKeyCode()==KeyEvent.VK_D){
+            x=x+4;
+            d=1;
+        }else{
+
+        }
+        this.repaint();
+
+    }
+    public void keyReleased(KeyEvent e){
+
+    }
+    public  void keyTyped(KeyEvent e){
+
+    }
+
+
 }
 //坦克类
 class Tank{

@@ -10,12 +10,12 @@ import  java.awt.*;
  */
 
 public class Demo01 extends JFrame {
-    Mypanel mp = null;
+    Mypanel01 mp = null;
     public static void main(String[] args) {
     Demo01 demo01 = new Demo01();
     }
     public Demo01(){
-        mp = new Mypanel();
+        mp = new Mypanel01();
         this.add(mp);
 
         this.setTitle("ndzy");//设置标题
@@ -28,7 +28,7 @@ public class Demo01 extends JFrame {
     }
 }
 //定义一个Mypanel(我自己的面板)
-class Mypanel extends JPanel{
+class Mypanel01 extends JPanel{
     //重写JPanel 的paint方法
     //Graphics 画笔
     public void paint(Graphics g){
