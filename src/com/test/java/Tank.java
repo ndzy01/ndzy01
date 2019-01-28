@@ -114,6 +114,7 @@ public class Tank {
     }
     //
 }
+
 class MyTank extends Tank implements Runnable{
     public MyTank(int x, int y) {
         super(x, y);
@@ -149,28 +150,95 @@ class MyTank extends Tank implements Runnable{
 }
 }
 
-
 class  QTank01 extends Tank implements Runnable {
     int times = 2;
-    //
+    //定义一个向量，可以访问MyTankPanel上的所有敌方坦克
+    Vector<QTank01> ets = new Vector<QTank01>();
     //敌人添加子弹，在坦克刚创建和坦克子弹死亡
-
     Vector<Zdan> ss01= new Vector<Zdan>();
     //Vector<QTank01> ets01 = new Vector<QTank01>();
     public QTank01(int x, int y) {
         super(x, y);
     }
+    //定义一个方法，得到MyTankPanel上敌方坦克向量
+    public void setEts(Vector<QTank01> vv) {
+        this.ets = vv;
+    }
+    //
+    public boolean isTouchQTank(){
+        boolean b=false;
+        int n=30;
+        switch (this.direction){
+            case 0:
+                for (int i = 0; i <ets.size(); i++) {
+                    QTank01 qt = ets.get(i);
+                    if (qt != this) {
+                        if (this.x >= qt.x && this.x <= (qt.x + n) && this.y >= qt.y && this.y <= (qt.y + n)) {
+                            return true;
+                        }
 
+                        if ((this.x + 30) >= qt.x && (this.x + 30) <= (qt.x + n) && this.y >= qt.y && this.y <= (qt.y + n)) {
+                            return true;
+                        }
+                    }
+                }
+                break;
+            case 1:
+                for (int i = 0; i <ets.size(); i++) {
+                    QTank01 qt = ets.get(i);
+                    if (qt != this) {
+                        if ((this.x+30) >= qt.x && (this.x+30) <= (qt.x + n) && this.y >= qt.y && this.y <= (qt.y + n)) {
+                            return true;
+                        }
+
+                        if ((this.x + 30) >= qt.x && (this.x + 30) <= (qt.x + n) && (this.y+30) >= qt.y &&(this.y+30) <= (qt.y + n)) {
+                            return true;
+                        }
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i <ets.size(); i++) {
+                    QTank01 qt = ets.get(i);
+                    if (qt != this) {
+                        if (this.x >= qt.x && this.x <= (qt.x + n) && (this.y+30) >= qt.y && (this.y+30) <= (qt.y + n)) {
+                            return true;
+                        }
+
+                        if ((this.x + 30) >= qt.x && (this.x + 30) <= (qt.x + n) && (this.y+30 )>= qt.y && (this.y +30)<= (qt.y + n)) {
+                            return true;
+                        }
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i <ets.size(); i++) {
+                    QTank01 qt = ets.get(i);
+                    if (qt != this) {
+                        if (this.x >= qt.x && this.x <= (qt.x + n) && this.y >= qt.y && this.y <= (qt.y + n)) {
+                            return true;
+                        }
+
+                        if (this.x >= qt.x && this.x <= (qt.x + n) && (this.y+30) >= qt.y && (this.y+30) <= (qt.y + n)) {
+                            return true;
+                        }
+                    }
+                }
+                break;
+        }
+        return b;
+    }
 
     @Override
     public void run() {
         int numbers=10;
+        //坦克运动
         while (true) {
             switch (this.direction) {
                 case 0:
                     for (int i = 0; i < numbers; i++) {
                         //坦克此时在向上走
-                        if (y > 5) {
+                        if (y > 5&&!this.isTouchQTank()) {
                             y -= speed;
                         }
                         try {
@@ -182,7 +250,7 @@ class  QTank01 extends Tank implements Runnable {
                     break;
                 case 1:
                     for (int i = 0; i < numbers; i++) {
-                        if (x < 750) {
+                        if (x < 750&&!this.isTouchQTank()) {
                             x += speed;
                         }
                         try {
@@ -194,7 +262,7 @@ class  QTank01 extends Tank implements Runnable {
                     break;
                 case 2:
                     for (int i = 0; i < numbers; i++) {
-                        if (y < 520) {
+                        if (y < 520&&!this.isTouchQTank()) {
                             y += speed;
                         }
                         try {
@@ -206,7 +274,7 @@ class  QTank01 extends Tank implements Runnable {
                     break;
                 case 3:
                     for (int i = 0; i < numbers; i++) {
-                        if (x > 5) {
+                        if (x > 5&&!this.isTouchQTank()) {
                             x -= speed;
                         }
                         try {
@@ -246,40 +314,7 @@ class  QTank01 extends Tank implements Runnable {
             }
 
             //坦克随机产生一个方向
-/*
-            for(int i=0;i<ets01.size();i++){
-                int q=200;
-                QTank01 qt =ets01.get(i);
-                for(int j=0;j<ets01.size();j++){
-                    QTank01 qt01=ets01.get(j);
-                    if(i!=j){
-                        switch (qt.direction){
-                            case 0:
-                                if((qt01.y-qt.y)<q){
-                                    this.direction=2;
-                                }
-                                break;
-                            case 1:
-                                if((qt01.x-qt.x)<q){
-                                    this.direction=3;
-                                }
-                                break;
-                            case 2:
-                                if((qt.y-qt01.y)<q){
-                                    this.direction=2;
-                                }
-                                break;
-                            case 3:
-                                if((qt.x-qt01.x)<q){
-                                    this.direction=1;
-                                }
-                                break;
-                        }
-                    }
-                }
-            }*/
             this.direction = (int) (Math.random() * 4);
-
 
             //判断敌方坦克是否死亡
             if (this.isLive == false) {

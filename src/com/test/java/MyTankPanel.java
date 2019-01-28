@@ -19,15 +19,16 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
     Vector<MyTank> ets00 = new Vector<MyTank>();
     //定义敌方坦克组
     Vector<QTank01> ets = new Vector<QTank01>();
-
-    int enSize = 5;
+    int enSize = 7;
+    //定义炸弹组
     Vector<Bomb> bombs = new Vector<Bomb>();
     //定义三张图片
     Image image1=null;
     Image image2=null;
     Image image3=null;
-
+    //构造函数，我的面板
     public MyTankPanel() {
+        //初始化我方坦克
         for (int i=0;i<1;i++){
             MyTank myTank = new MyTank(200,300);
             myTank.setColor(0);
@@ -38,11 +39,14 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             //
             ets00.add(myTank);
         }
-
+        //初始化敌方坦克
         for (int i=0;i<enSize;i++){
             QTank01 qT = new QTank01((i+1)*100,200);
             qT.setColor(1);
             qT.setType(1);
+            //将MyTankPanel上敌方坦克向量，告诉敌方坦克
+            qT.setEts(ets);
+
             Thread t1= new Thread(qT);
             t1.start();
             Zdan z =new Zdan(qT.x+8,qT.y-5,0);
@@ -52,8 +56,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             t2.start();
             ets.add(qT);
         }
-        //初始化图片
-
+        //初始化炸弹特效图片
         try{
             image1 =ImageIO.read(new File("D:\\ndzy\\src\\3.jpg"));
             image2 =ImageIO.read(new File("D:\\ndzy\\src\\3.jpg"));
@@ -61,11 +64,8 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        //image1=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/3.jpg"));
-        //image2=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/2.jpg"));
-        //image3=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/1.jpg"));
     }
+    //判断子弹和坦克，碰撞情况
     public void tk_zd(Zdan z,Tank t){
         //判断子弹是否击中坦克
         //判断坦克方向
@@ -75,6 +75,12 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                     //子弹死亡，敌方坦克死亡
                     z.isLive=false;
                     t.isLive=false;
+                    if(t.type==1){
+                        Recorder.reduceNum();
+                        Recorder.addNum();
+                    }else {
+                        Recorder.reduce_mylife_Num();
+                    }
                     //创建一个炸弹，放在bombs中
                     Bomb b = new Bomb(t.x,t.y);
                     bombs.add(b);
@@ -85,6 +91,12 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                     //子弹死亡，敌方坦克死亡
                     z.isLive=false;
                     t.isLive=false;
+                    if(t.type==1){
+                        Recorder.reduceNum();
+                        Recorder.addNum();
+                    }else {
+                        Recorder.reduce_mylife_Num();
+                    }
                     Bomb b = new Bomb(t.x,t.y);
                     bombs.add(b);
                 }
@@ -94,6 +106,12 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                     //子弹死亡，敌方坦克死亡
                     z.isLive=false;
                     t.isLive=false;
+                    if(t.type==1){
+                        Recorder.reduceNum();
+                        Recorder.addNum();
+                    }else {
+                        Recorder.reduce_mylife_Num();
+                    }
                     Bomb b = new Bomb(t.x,t.y);
                     bombs.add(b);
                 }
@@ -103,6 +121,12 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                     //子弹死亡，敌方坦克死亡
                     z.isLive=false;
                     t.isLive=false;
+                    if(t.type==1){
+                        Recorder.reduceNum();
+                        Recorder.addNum();
+                    }else {
+                        Recorder.reduce_mylife_Num();
+                    }
                     Bomb b = new Bomb(t.x,t.y);
                     bombs.add(b);
                 }
@@ -110,12 +134,32 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
         }
 
     }
+    public void showInfo(Graphics g){
+        this.drawTank(0,600,g,0,0,0);
+        g.setColor(Color.black);
+        g.drawString(Recorder.getMylife()+"",25,620);
 
+        this.drawTank(100,600,g,0,1,1);
+        g.drawString(Recorder.getEnNumber()+"",125,620);
+
+        g.setColor(Color.black);
+        Font f=new Font("宋体",Font.BOLD,20);
+        g.setFont(f);
+        g.drawString("你的总成绩：",810,20);
+
+        this.drawTank(820,40,g,1,1,1);
+
+        g.setColor(Color.black);
+        g.drawString(Recorder.getAllNumber()+"",870,55);
+    }
+    //画图
     public void paint (Graphics g){
         super.paint(g);
         g.fillRect(0,0,800,600);
 
+        this.showInfo(g);
         //画我的坦克,和子弹
+
         for(int i=0;i<ets00.size();i++) {
             MyTank mt = ets00.get(i);
             if (mt.isLive) {
@@ -127,40 +171,21 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                     if(zd.x<20||zd.y<20||zd.x>780||zd.y>580){
                         zd.isLive=false;
                     }
-
-
                     if(zd.isLive){
                         g.setColor(Color.green);
                         g.fill3DRect(zd.x, zd.y, 5, 5, false);
-
                     }else{
                         mt.ss.remove(zd);
                     }
                     Thread t = new Thread(zd);
                     t.start();
                 }
-
             }else {
                 ets00.remove(mt);/////
             }
         }
-
-        //画炸弹
-        for(int i=0;i<bombs.size();i++){
-            Bomb b = bombs.get(i);
-            if(b.life>4){
-                g.drawImage(image1,b.x,b.y,30,30,this);
-            }else if(b.life>2){
-                g.drawImage(image2,b.x,b.y,30,30,this);
-            }else{
-                g.drawImage(image3,b.x,b.y,30,30,this);
-            }
-            b.lifeDown();
-            if(b.life==0){
-                bombs.remove(b);
-            }
-        }
         //画敌方坦克和子弹
+
         for(int i=0;i<ets.size();i++) {
             QTank01 qt = ets.get(i);
             if (qt.isLive) {
@@ -183,8 +208,23 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 }
             }
         }
+        //画炸弹
+        for(int i=0;i<bombs.size();i++){
+            Bomb b = bombs.get(i);
+            if(b.life>4){
+                g.drawImage(image1,b.x,b.y,30,30,this);
+            }else if(b.life>2){
+                g.drawImage(image2,b.x,b.y,30,30,this);
+            }else{
+                g.drawImage(image3,b.x,b.y,30,30,this);
+            }
+            b.lifeDown();
+            if(b.life==0){
+                bombs.remove(b);
+            }
+        }
     }
-
+    //判断坦克的颜色类型
     public void pd_color(int color,Graphics g){
         //坦克颜色
         switch (color){
@@ -196,6 +236,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 break;
         }
     }
+    //定义一个画我的坦克的函数drawTank
     public  void m_Tank(int x,int y,int direct ,Graphics g){
 
         switch (direct){
@@ -233,6 +274,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                      break;
         }
     }
+    //定义一个画敌方坦克的函数drawTank
     public  void q_Tank(int x,int y,int direct ,Graphics g){
         switch (direct){
             //向上
@@ -283,9 +325,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 break;
         }
     }
-
-
-    //实现接口
+    //实现监控接口
     public void keyPressed(KeyEvent e){
         for(int i=0;i<ets00.size();i++) {
             if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -304,12 +344,28 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             }
             if (e.getKeyCode() == KeyEvent.VK_J) {
 
-                //坦克只能发6发子弹
+                //坦克只能发100发子弹
                 if (this.ets00.get(i).ss.size() <= 100) {
                     ets00.get(i).shot();
                 }
             }
         }
+        /*
+        if(e.getKeyCode()==KeyEvent.VK_0){
+            for (int i = 0; i <ets00.size() ; i++) {
+                ets00.get(i).speed=0;
+                for (int j = 0; j <ets00.get(i).ss.size() ; j++) {
+
+                ets00.get(i).ss.get(j).speed=0;
+                }
+            }
+            for (int x = 0; x < ets.size(); x++) {
+                ets00.get(x).speed=0;
+                for (int y = 0; y <ets00.get(x).ss.size() ; y++) {
+                  ets00.get(x).ss.get(y).speed=0;
+                }
+            }
+        }*/
         this.repaint();
     }
     public void keyReleased(KeyEvent e){
@@ -318,11 +374,8 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
     public  void keyTyped(KeyEvent e){
 
     }
-
-
-
     //判断我方坦克是否击中敌方
-    public void mk_shot(){
+    public void mk_shot_qk(){
         for(int n=0;n<ets00.size();n++) {
             for (int i = 0; i <ets00.get(n).ss.size();i++) {
                 Zdan zd = ets00.get(n).ss.get(i);
@@ -334,6 +387,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                         QTank01 qt = ets.get(j);
                         if (qt.isLive) {
                             this.tk_zd(zd, qt);
+
                         }
                     }
                 }
@@ -341,7 +395,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
         }
     }
     //判断敌方坦克是否击中我方坦克
-    public  void qk_shot(){
+    public  void qk_shot_mk(){
         for (int i=0;i<ets.size();i++){
             QTank01 qt = ets.get(i);
             for(int j=0;j<qt.ss01.size();j++){
@@ -356,42 +410,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
         }
     }
     //实现接口
-    public  void pz_qt(){
-        for(int i=0;i<ets.size();i++){
-            int q=100;
-            QTank01 qt =ets.get(i);
-            for(int j=0;j<ets.size();j++){
-                QTank01 qt01=ets.get(j);
-                if(i!=j){
-                    switch (qt.direction){
-                        case 0:
-                            if((qt01.y-qt.y)==q||(qt.x==qt01.x)){
-                                qt.direction=2;
-                            }
-                            break;
-                        case 1:
-                            if((qt01.x-qt.x)==q||(qt.y==qt01.y)){
-                                qt.direction=3;
-                            }
-                            break;
-                        case 2:
-                            if((qt.y-qt01.y)==q||(qt.x==qt01.x)){
-                                qt.direction=2;
-                            }
-                            break;
-                        case 3:
-                            if((qt.x-qt01.x)==q||(qt.y==qt01.y)){
-                                qt.direction=1;
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-    }
     public void run(){
-       // QTank01 q =new QTank01(0,0);
-       // q.ets01=ets;
         while (true){
             try{
                 Thread.sleep(100);
@@ -399,11 +418,9 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 e.printStackTrace();
             }
             //判断我方坦克是否击中敌方
-            this.mk_shot();
+            this.mk_shot_qk();
             //判断敌方坦克是否击中我方坦克
-            this.qk_shot();
-            //*****************
-            this.pz_qt();
+            this.qk_shot_mk();
             //重绘
             this.repaint();
         }
