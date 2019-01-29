@@ -15,6 +15,8 @@ import java.util.Vector;
  */
 
 public class MyTankPanel extends JPanel implements KeyListener,Runnable {
+    Vector<Node> nodes = new Vector<Node>();
+    static String flag ="NEW GAME";
     //定义我的坦克组
     Vector<MyTank> ets00 = new Vector<MyTank>();
     //定义敌方坦克组
@@ -27,7 +29,9 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
     Image image2=null;
     Image image3=null;
     //构造函数，我的面板
-    public MyTankPanel() {
+    public MyTankPanel(String flag) {
+       // Recorder.getRecording();
+
         //初始化我方坦克
         for (int i=0;i<1;i++){
             MyTank myTank = new MyTank(200,300);
@@ -40,21 +44,44 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             ets00.add(myTank);
         }
         //初始化敌方坦克
-        for (int i=0;i<enSize;i++){
-            QTank01 qT = new QTank01((i+1)*100,200);
-            qT.setColor(1);
-            qT.setType(1);
-            //将MyTankPanel上敌方坦克向量，告诉敌方坦克
-            qT.setEts(ets);
+        if(flag.equals("NEW GAME")){
+            for (int i=0;i<enSize;i++){
+                QTank01 qT = new QTank01((i+1)*100,200);
+                qT.setColor(1);
+                qT.setType(1);
+                //将MyTankPanel上敌方坦克向量，告诉敌方坦克
+                qT.setEts(ets);
 
-            Thread t1= new Thread(qT);
-            t1.start();
-            Zdan z =new Zdan(qT.x+8,qT.y-5,0);
-            //
-            qT.ss01.add(z);
-            Thread t2= new Thread(z);
-            t2.start();
-            ets.add(qT);
+                Thread t1= new Thread(qT);
+                t1.start();
+                Zdan z =new Zdan(qT.x+8,qT.y-5,0);
+                //
+                qT.ss01.add(z);
+                Thread t2= new Thread(z);
+                t2.start();
+                ets.add(qT);
+            }
+        }else {
+
+            Recorder.getNodesAndqt();
+            for (int i = 0; i < Recorder.nodes.size(); i++) {
+                System.out.println(Recorder.nodes.size());
+                QTank01 qT = new QTank01(Recorder.nodes.get(i).x, Recorder.nodes.get(i).y);
+                qT.setDirection(Recorder.nodes.get(i).direct);
+                qT.setColor(1);
+                qT.setType(1);
+                //将MyTankPanel上敌方坦克向量，告诉敌方坦克
+                qT.setEts(ets);
+
+                Thread t1 = new Thread(qT);
+                t1.start();
+                Zdan z = new Zdan(qT.x + 8, qT.y - 5, 0);
+                //
+                qT.ss01.add(z);
+                Thread t2 = new Thread(z);
+                t2.start();
+                ets.add(qT);
+            }
         }
         //初始化炸弹特效图片
         try{
@@ -65,9 +92,11 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
             e.printStackTrace();
         }
     }
+
     //判断子弹和坦克，碰撞情况
     public void tk_zd(Zdan z,Tank t){
         //判断子弹是否击中坦克
+
         //判断坦克方向
         switch (t.direction){
             case 0:
@@ -132,6 +161,7 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 }
                 break;
         }
+
 
     }
     public void showInfo(Graphics g){
@@ -350,22 +380,6 @@ public class MyTankPanel extends JPanel implements KeyListener,Runnable {
                 }
             }
         }
-        /*
-        if(e.getKeyCode()==KeyEvent.VK_0){
-            for (int i = 0; i <ets00.size() ; i++) {
-                ets00.get(i).speed=0;
-                for (int j = 0; j <ets00.get(i).ss.size() ; j++) {
-
-                ets00.get(i).ss.get(j).speed=0;
-                }
-            }
-            for (int x = 0; x < ets.size(); x++) {
-                ets00.get(x).speed=0;
-                for (int y = 0; y <ets00.get(x).ss.size() ; y++) {
-                  ets00.get(x).ss.get(y).speed=0;
-                }
-            }
-        }*/
         this.repaint();
     }
     public void keyReleased(KeyEvent e){
